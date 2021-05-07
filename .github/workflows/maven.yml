@@ -34,10 +34,9 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         WITH_V: true
-    - uses: ncipollo/release-action@v1
+    - uses: actions/create-release@v1
       with:
         artifacts: "target/*"
-        tag_name: ${{ steps.tag_version.outputs.new_tag }}
-        release_name: Release ${{ steps.tag_version.outputs.new_tag }}
-        commit: $GITHUB_SHA
+        tag: ${{ steps.tag_version.outputs.new_tag }}
+        name: Release ${{ steps.tag_version.outputs.new_tag }}
         token: ${{ secrets.GITHUB_TOKEN }}
