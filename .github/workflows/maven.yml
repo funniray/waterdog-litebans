@@ -31,4 +31,6 @@ jobs:
     - uses: ncipollo/release-action@v1
       with:
         artifacts: "target/*"
+        tag: ${{env.GITHUB_SHA}}
+        commit: ${{env.GITHUB_SHA}}
         token: ${{ secrets.GITHUB_TOKEN }}
