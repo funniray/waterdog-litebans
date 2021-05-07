@@ -1,0 +1,22 @@
+jdbcurl: "jdbc:mysql://localhost:3306/litebans"
+dbusername: "root"
+dbpassword: ""
+
+#You should change this for each proxy running the server
+servername: litebans
+serveruuid: f15b78eda7294493b847f54b2005dd2e
+
+#Messages
+SilentPrefix: "[Silent] "
+BanMessage: >-
+  You have been banned on network.
+    Reason: %1$s
+    Punished By: %2$s
+    Duration: %3$s
+  You may appeal your ban at https://example.com
+BanJoinMessage: "%s tried to join, but they were banned."
+BanIPJoinMessage: "%s tried to join, but they were ipbanned."
+BanBroadcast: "Player %1$s was banned by %2$s for %3$s duration: %4$s"
+MuteBroadcast: "Player %1$s was muted by %2$s for %3$s duration: %4$s"
+WarnBroadcast: "Player %1$s was warned by %2$s for %3$s"
+KickBroadcast: "Player %1$s was banned by %2$s for %3$s"
