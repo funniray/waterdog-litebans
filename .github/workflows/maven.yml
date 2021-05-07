@@ -28,9 +28,16 @@ jobs:
       with:
         name: Package
         path: staging
+    - name: Bump version and push tag
+      id: tag_version
+      uses: anothrNick/github-tag-action@1.26.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        WITH_V: true
     - uses: ncipollo/release-action@v1
       with:
         artifacts: "target/*"
-        tag: $GITHUB_SHA
+        tag_name: ${{ steps.tag_version.outputs.new_tag }}
+        release_name: Release ${{ steps.tag_version.outputs.new_tag }}
         commit: $GITHUB_SHA
         token: ${{ secrets.GITHUB_TOKEN }}
