@@ -6,11 +6,11 @@ import com.funniray.lbwd.commands.*;
 import com.funniray.lbwd.handlers.LoginHandler;
 import com.funniray.lbwd.handlers.PreLoginHandler;
 import com.funniray.lbwd.handlers.MessageHandler;
-import dev.waterdog.event.defaults.PlayerChatEvent;
-import dev.waterdog.event.defaults.PlayerLoginEvent;
-import dev.waterdog.event.defaults.PlayerPreLoginEvent;
-import dev.waterdog.plugin.Plugin;
-import dev.waterdog.utils.Configuration;
+import dev.waterdog.waterdogpe.event.defaults.PlayerChatEvent;
+import dev.waterdog.waterdogpe.event.defaults.PlayerLoginEvent;
+import dev.waterdog.waterdogpe.event.defaults.PlayerPreLoginEvent;
+import dev.waterdog.waterdogpe.plugin.Plugin;
+import dev.waterdog.waterdogpe.utils.Configuration;
 
 import java.io.File;
 import java.io.IOException;

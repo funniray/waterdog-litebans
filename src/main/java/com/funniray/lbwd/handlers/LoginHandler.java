@@ -3,9 +3,9 @@ package com.funniray.lbwd.handlers;
 import com.funniray.lbwd.LBWD;
 import com.funniray.lbwd.datatypes.Ban;
 import com.funniray.lbwd.utils.Colors;
-import dev.waterdog.ProxyServer;
-import dev.waterdog.event.defaults.PlayerLoginEvent;
-import dev.waterdog.player.ProxiedPlayer;
+import dev.waterdog.waterdogpe.ProxyServer;
+import dev.waterdog.waterdogpe.event.defaults.PlayerLoginEvent;
+import dev.waterdog.waterdogpe.player.ProxiedPlayer;
 
 import java.util.Set;
 import java.util.function.Consumer;

@@ -4,9 +4,9 @@ import com.funniray.lbwd.LBWD;
 import com.funniray.lbwd.datatypes.Ban;
 import com.funniray.lbwd.utils.Colors;
 import com.funniray.lbwd.utils.DateUtils;
-import dev.waterdog.ProxyServer;
-import dev.waterdog.event.defaults.PlayerPreLoginEvent;
-import dev.waterdog.player.ProxiedPlayer;
+import dev.waterdog.waterdogpe.ProxyServer;
+import dev.waterdog.waterdogpe.event.defaults.PlayerPreLoginEvent;
+import dev.waterdog.waterdogpe.player.ProxiedPlayer;
 
 import java.util.Date;
 import java.util.Set;

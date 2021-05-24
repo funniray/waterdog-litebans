@@ -4,9 +4,9 @@ import com.funniray.lbwd.LBWD;
 import com.funniray.lbwd.utils.Colors;
 import com.funniray.lbwd.utils.DateUtils;
 import com.funniray.lbwd.utils.UseQuotes;
-import dev.waterdog.ProxyServer;
-import dev.waterdog.command.CommandSender;
-import dev.waterdog.player.ProxiedPlayer;
+import dev.waterdog.waterdogpe.ProxyServer;
+import dev.waterdog.waterdogpe.command.CommandSender;
+import dev.waterdog.waterdogpe.player.ProxiedPlayer;
 
 import javax.annotation.Nullable;
 import java.util.*;

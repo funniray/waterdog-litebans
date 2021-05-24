@@ -4,9 +4,9 @@ import com.funniray.lbwd.LBWD;
 import com.funniray.lbwd.datatypes.Alt;
 import com.funniray.lbwd.utils.Colors;
 import com.funniray.lbwd.utils.UseQuotes;
-import dev.waterdog.command.Command;
-import dev.waterdog.command.CommandSender;
-import dev.waterdog.command.CommandSettings;
+import dev.waterdog.waterdogpe.command.Command;
+import dev.waterdog.waterdogpe.command.CommandSender;
+import dev.waterdog.waterdogpe.command.CommandSettings;
 
 import java.util.Set;
 import java.util.UUID;
