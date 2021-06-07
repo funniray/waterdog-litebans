@@ -143,6 +143,7 @@ public class Ban {
 
         if (!commandSender.hasPermission("litebans."+(until>-1?"temp":"")+node)) {
             commandSender.sendMessage(Colors.RED+"You do not have permission to "+(until>-1?"temp":"")+node+" people.");
+            return null;
         }
 
         reason = String.join(" ", Arrays.copyOfRange(strings,start,strings.length));
