@@ -70,6 +70,12 @@ public class LBWD extends Plugin {
 
         datastore = new SQLStore(config.getString("jdbcurl"),config.getString("dbusername"),config.getString("dbpassword"));
 
+        if (getConfig().getBoolean("showpiracywarning")) {
+            this.getLogger().critical("A WaterDogPE plugin that attempts at being fully compatible with litebans\n" +
+                "A free plugin by Funniray. https://github.com/funniray/waterdog-litebans If you paid for this plugin, you were scammed.\n" +
+                "Report resellers to beingscammed@reallyisnt.fun");
+        }
+
         getProxy().getCommandMap().registerCommand(new BanCommand());
         getProxy().getCommandMap().registerCommand(new PardonCommand());
         getProxy().getCommandMap().registerCommand(new MuteCommand());
