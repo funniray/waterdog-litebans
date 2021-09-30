@@ -18,6 +18,7 @@
 package com.funniray.lbwd.datatypes;
 
 import com.funniray.lbwd.LBWD;
+import com.funniray.lbwd.events.BanEvent;
 import com.funniray.lbwd.utils.Colors;
 import com.funniray.lbwd.utils.DateUtils;
 import com.funniray.lbwd.utils.UseQuotes;
@@ -221,6 +222,14 @@ public class Ban {
 
         Ban ban = new Ban(uuid,ip,reason,senderUuid,senderName,(double) (new Date()).getTime(),until,silent,isIpBan,true,"*",false);
         ban.name = playerName;
+
+        BanEvent event = new BanEvent(ban,node);
+
+        ProxyServer.getInstance().getEventManager().callEvent(event);
+
+        if (event.isCancelled()) {
+            return null;
+        }
 
         return ban;
     }

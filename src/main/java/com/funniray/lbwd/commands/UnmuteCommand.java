@@ -19,6 +19,7 @@ package com.funniray.lbwd.commands;
 
 import com.funniray.lbwd.LBWD;
 import com.funniray.lbwd.datatypes.Ban;
+import com.funniray.lbwd.events.UnbanEvent;
 import com.funniray.lbwd.utils.Colors;
 import dev.waterdog.waterdogpe.ProxyServer;
 import dev.waterdog.waterdogpe.command.Command;
@@ -59,6 +60,9 @@ public class UnmuteCommand extends Command {
             }
 
             ProxyServer.getInstance().getLogger().info(Colors.GREEN + "Player " + ban.getName() + " was unmuted by " + ban.getRemovedByName());
+
+            UnbanEvent event = new UnbanEvent(ban,"mute");
+            ProxyServer.getInstance().getEventManager().callEvent(event);
 
             ProxiedPlayer p = ProxyServer.getInstance().getPlayer(ban.getUuid());
             if (p!=null) {
