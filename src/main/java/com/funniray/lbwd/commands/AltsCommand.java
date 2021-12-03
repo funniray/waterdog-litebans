@@ -40,6 +40,12 @@ public class AltsCommand extends Command {
     @Override
     public boolean onExecute(CommandSender commandSender, String s, String[] strings) {
         strings = UseQuotes.parseArgs(strings);
+
+        if (!LBWD.getConfigBoolean("checkAlts")) {
+            commandSender.sendMessage(Colors.RED + "Checking alts is disabled on this server");
+            return true;
+        }
+
         if (strings.length >= 1) {
             Set<Alt> alts;
 

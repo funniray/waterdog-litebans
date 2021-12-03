@@ -32,6 +32,12 @@ jdbcurl: "jdbc:mysql://localhost:3306/litebans"
 dbusername: "root"
 dbpassword: ""
 
+#This statement may cause issues on MySQL 5.7 or MariaDB versions less than 10.2.2
+#If it is, disable this option.
+
+#See https://github.com/funniray/waterdog-litebans/issues/2
+checkAlts: true
+
 #You should change this for each proxy running the server
 servername: litebans
 serveruuid: f15b78eda7294493b847f54b2005dd2e

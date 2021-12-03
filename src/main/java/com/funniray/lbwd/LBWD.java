@@ -60,6 +60,9 @@ public class LBWD extends Plugin {
     public static String getConfigString(String str) {
         return config.getString(str);
     }
+    public static boolean getConfigBoolean(String str) {
+        return config.getBoolean(str);
+    }
 
     @Override
     public void onEnable() {

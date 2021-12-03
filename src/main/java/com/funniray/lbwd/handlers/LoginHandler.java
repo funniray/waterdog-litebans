@@ -54,6 +54,10 @@ public class LoginHandler implements Consumer<PlayerLoginEvent> {
         }
 
 
+        if (!LBWD.getConfigBoolean("checkAlts")) {
+            return;
+        }
+
         Set<Ban> bans = LBWD.datastore.getAltsBanned(e.getPlayer().getUniqueId());
 
         if (bans.size() > 0) {
