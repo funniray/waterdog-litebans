@@ -18,6 +18,7 @@
 package com.funniray.lbwd;
 
 import com.funniray.lbwd.Datastores.Datastore;
+import com.funniray.lbwd.Datastores.H2Store;
 import com.funniray.lbwd.Datastores.SQLStore;
 import com.funniray.lbwd.commands.*;
 import com.funniray.lbwd.handlers.LoginHandler;
@@ -33,6 +34,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.util.Locale;
 
 public class LBWD extends Plugin {
 
@@ -71,7 +73,14 @@ public class LBWD extends Plugin {
 
         LBWD.config = getConfig();
 
-        datastore = new SQLStore(config.getString("jdbcurl"),config.getString("dbusername"),config.getString("dbpassword"));
+        switch (config.getString("store").toLowerCase(Locale.ROOT)) {
+            case "h2":
+                datastore = new H2Store(this.getDataFolder().getAbsolutePath());
+                break;
+            case "mysql":
+            default:
+                datastore = new SQLStore(config.getString("jdbcurl"),config.getString("dbusername"),config.getString("dbpassword"));
+        }
 
         if (getConfig().getBoolean("showpiracywarning")) {
             this.getLogger().critical("A WaterDogPE plugin that attempts at being fully compatible with litebans\n" +
@@ -98,6 +107,11 @@ public class LBWD extends Plugin {
         getProxy().getEventManager().subscribe(PlayerChatEvent.class, new MessageHandler());
 
 
+    }
+
+    @Override
+    public void onDisable() {
+        datastore.close();
     }
 
 

@@ -26,58 +26,55 @@ import java.sql.*;
 import java.util.*;
 
 @SuppressWarnings("DuplicatedCode")
-public class SQLStore implements Datastore {
+public class H2Store implements Datastore {
 
-    private static final String table_prefix = "litebans_";
+    //language=H2
+    private static final String CREATE_BANS = "CREATE TABLE IF NOT EXISTS bans ( id bigint auto_increment, uuid varchar(36), ip varchar(45), reason varchar(2048), banned_by_uuid varchar(36), banned_by_name varchar(128), removed_by_uuid varchar(36), removed_by_name varchar(128), removed_by_date timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, time bigint(20), until bigint(20), server_scope varchar(32), server_origin varchar(32), silent bit(1), ipban bit(1), active bit(1) )";//language=H2
+    private static final String CREATE_MUTES = "CREATE TABLE IF NOT EXISTS mutes ( id bigint auto_increment, uuid varchar(36), ip varchar(45), reason varchar(2048), banned_by_uuid varchar(36), banned_by_name varchar(128), removed_by_uuid varchar(36), removed_by_name varchar(128), removed_by_date timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, time bigint(20), until bigint(20), server_scope varchar(32), server_origin varchar(32), silent bit(1), ipban bit(1), active bit(1) )";//language=H2
+    private static final String CREATE_WARNS = "CREATE TABLE IF NOT EXISTS warnings ( id bigint auto_increment, uuid varchar(36), ip varchar(45), reason varchar(2048), banned_by_uuid varchar(36), banned_by_name varchar(128), removed_by_uuid varchar(36), removed_by_name varchar(128), removed_by_date timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, time bigint(20), until bigint(20), server_scope varchar(32), server_origin varchar(32), silent bit(1), ipban bit(1), active bit(1), warned bit(1) )";//language=H2
+    private static final String CREATE_KICKS = "CREATE TABLE IF NOT EXISTS kicks ( id bigint auto_increment, uuid varchar(36), ip varchar(45), reason varchar(2048), banned_by_uuid varchar(36), banned_by_name varchar(128), time bigint(20), until bigint(20), server_scope varchar(32), server_origin varchar(32), silent bit(1), ipban bit(1), active bit(1) )";//language=H2
+    private static final String CREATE_HISTORY = "CREATE TABLE IF NOT EXISTS history (id bigint auto_increment, uuid varchar(36), ip varchar(45), name varchar(128), date timestamp DEFAULT CURRENT_TIMESTAMP)";//language=H2
 
-    private static final String CREATE_BANS = "CREATE TABLE IF NOT EXISTS "+table_prefix+"bans ( id SERIAL, uuid varchar(36), ip varchar(45), reason varchar(2048), banned_by_uuid varchar(36), banned_by_name varchar(128), removed_by_uuid varchar(36), removed_by_name varchar(128), removed_by_date timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, time bigint(20), until bigint(20), server_scope varchar(32), server_origin varchar(32), silent bit(1), ipban bit(1), active bit(1) );";
-    private static final String CREATE_MUTES = "CREATE TABLE IF NOT EXISTS "+table_prefix+"mutes ( id SERIAL, uuid varchar(36), ip varchar(45), reason varchar(2048), banned_by_uuid varchar(36), banned_by_name varchar(128), removed_by_uuid varchar(36), removed_by_name varchar(128), removed_by_date timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, time bigint(20), until bigint(20), server_scope varchar(32), server_origin varchar(32), silent bit(1), ipban bit(1), active bit(1) );";
-    private static final String CREATE_WARNS = "CREATE TABLE IF NOT EXISTS "+table_prefix+"warnings ( id SERIAL, uuid varchar(36), ip varchar(45), reason varchar(2048), banned_by_uuid varchar(36), banned_by_name varchar(128), removed_by_uuid varchar(36), removed_by_name varchar(128), removed_by_date timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, time bigint(20), until bigint(20), server_scope varchar(32), server_origin varchar(32), silent bit(1), ipban bit(1), active bit(1), warned bit(1) );";
-    private static final String CREATE_KICKS = "CREATE TABLE IF NOT EXISTS "+table_prefix+"kicks ( id SERIAL, uuid varchar(36), ip varchar(45), reason varchar(2048), banned_by_uuid varchar(36), banned_by_name varchar(128), time bigint(20), until bigint(20), server_scope varchar(32), server_origin varchar(32), silent bit(1), ipban bit(1), active bit(1) );";
-    private static final String CREATE_CONFIG = "CREATE TABLE IF NOT EXISTS "+table_prefix+"config (id SERIAL, version varchar(128), build varchar(128), timezone varchar(64) DEFAULT '+00:00');";
-    private static final String CREATE_VERSION = "INSERT INTO "+table_prefix+"config (id, version, build) VALUES (1, '2021-04-13@07:15', 482) ON DUPLICATE KEY UPDATE version = '2021-04-13@07:15',build = 482;";
-    private static final String CREATE_HISTORY = "CREATE TABLE IF NOT EXISTS "+table_prefix+"history (id SERIAL, uuid varchar(36), ip varchar(45), name varchar(128), date timestamp DEFAULT CURRENT_TIMESTAMP);";
+    public static final String GET_BANS_BY_UUID_HISTORICAL = "SELECT *, false as warned FROM bans WHERE UUID=?";//language=H2
+    public static final String GET_MUTES_BY_UUID_HISTORICAL = "SELECT *, false as warned FROM mutes WHERE UUID=?";//language=H2
+    public static final String GET_WARNS_BY_UUID_HISTORICAL = "SELECT * FROM warnings WHERE UUID=?";//language=H2
+    public static final String GET_KICKS_BY_UUID_HISTORICAL = "SELECT *, false as warned, \"00000000-0000-0000-0000-000000000000\" as removed_by_uuid, null as removed_by_name, null as removed_by_date FROM kicks WHERE UUID=?"; //language=H2
 
-    public static final String GET_BANS_BY_UUID_HISTORICAL = "SELECT *, false as warned FROM "+table_prefix+"bans WHERE UUID=?;";
-    public static final String GET_MUTES_BY_UUID_HISTORICAL = "SELECT *, false as warned FROM "+table_prefix+"mutes WHERE UUID=?;";
-    public static final String GET_WARNS_BY_UUID_HISTORICAL = "SELECT * FROM "+table_prefix+"warnings WHERE UUID=?;";
-    public static final String GET_KICKS_BY_UUID_HISTORICAL = "SELECT *, false as warned, \"00000000-0000-0000-0000-000000000000\" as removed_by_uuid, null as removed_by_name, null as removed_by_date FROM "+table_prefix+"kicks WHERE UUID=?;";
 
-    public static final String GET_BANS_BY_UUID_ACTIVE = "SELECT *, false AS warned FROM "+table_prefix+"bans WHERE uuid=? AND ipban=false AND active=true AND (until>=(UNIX_TIMESTAMP()*1000) OR until=-1);";
-    public static final String GET_SOMETHING_BY_UUID_ACTIVE = "SELECT *, false AS warned FROM "+table_prefix+"%node%s WHERE uuid=? AND ipban=false AND active=true AND (until>=(UNIX_TIMESTAMP()*1000) OR until=-1);";
-    public static final String GET_SOMETHING_BY_IP_ACTIVE = "SELECT *, false AS warned FROM "+table_prefix+"%node%s WHERE ip=? AND ipban=TRUE AND active=true AND (until>=(UNIX_TIMESTAMP()*1000) OR until=-1);";
+    public static final String GET_BANS_BY_UUID_ACTIVE = "SELECT *, false AS warned FROM bans WHERE uuid=? AND ipban=false AND active=true AND (until>=(EXTRACT(EPOCH FROM CURRENT_TIMESTAMP)*1000) OR until=-1)"; //language=H2
+    public static final String GET_SOMETHING_BY_UUID_ACTIVE = "SELECT *, false AS warned FROM %node%s WHERE uuid=? AND ipban=false AND active=true AND (until>=(EXTRACT(EPOCH FROM CURRENT_TIMESTAMP)*1000) OR until=-1)"; //language=H2
+    public static final String GET_SOMETHING_BY_IP_ACTIVE = "SELECT *, false AS warned FROM %node%s WHERE ip=? AND ipban=TRUE AND active=true AND (until>=(EXTRACT(EPOCH FROM CURRENT_TIMESTAMP)*1000) OR until=-1)";
 
-    public static final String ADD_BAN = "INSERT INTO "+table_prefix+"bans (uuid, ip, reason, banned_by_uuid, banned_by_name, time, until, silent, ipban, active, server_origin, server_scope) VALUES (?,?,?,?,?,?,?,?,?,true,'proxy','*')";
-    public static final String REMOVE_BAN = "UPDATE "+table_prefix+"bans SET removed_by_uuid=?, removed_by_name=?, active=FALSE WHERE id=?;";
+    public static final String ADD_BAN = "INSERT INTO bans (uuid, ip, reason, banned_by_uuid, banned_by_name, time, until, silent, ipban, active, server_origin, server_scope) VALUES (?,?,?,?,?,?,?,?,?,true,'proxy','*')";
+    public static final String REMOVE_BAN = "UPDATE bans SET removed_by_uuid=?, removed_by_name=?, active=FALSE WHERE id=?";
 
-    public static final String ADD_MUTE = "INSERT INTO "+table_prefix+"mutes (uuid, ip, reason, banned_by_uuid, banned_by_name, time, until, silent, ipban, active, server_origin, server_scope) VALUES (?,?,?,?,?,?,?,?,?,true,'proxy','*')";
-    public static final String REMOVE_MUTE = "UPDATE "+table_prefix+"mutes SET removed_by_uuid=?, removed_by_name=?, active=FALSE WHERE id=?;";
+    public static final String ADD_MUTE = "INSERT INTO mutes (uuid, ip, reason, banned_by_uuid, banned_by_name, time, until, silent, ipban, active, server_origin, server_scope) VALUES (?,?,?,?,?,?,?,?,?,true,'proxy','*')";
+    public static final String REMOVE_MUTE = "UPDATE mutes SET removed_by_uuid=?, removed_by_name=?, active=FALSE WHERE id=?";
 
-    public static final String ADD_KICK = "INSERT INTO "+table_prefix+"kicks (uuid, ip, reason, banned_by_uuid, banned_by_name, time, until, silent, ipban, active, server_origin, server_scope) VALUES (?,?,?,?,?,?,?,?,?,true,'proxy','*')";
+    public static final String ADD_KICK = "INSERT INTO kicks (uuid, ip, reason, banned_by_uuid, banned_by_name, time, until, silent, ipban, active, server_origin, server_scope) VALUES (?,?,?,?,?,?,?,?,?,true,'proxy','*')";
 
-    public static final String ADD_WARN = "INSERT INTO "+table_prefix+"warnings (uuid, ip, reason, banned_by_uuid, banned_by_name, time, until, silent, ipban, active, server_origin, server_scope, warned) VALUES (?,?,?,?,?,?,?,?,?,true,'proxy','*', false)";
-    public static final String GET_ACTIVE_UNWARNED = "SELECT * FROM "+table_prefix+"warnings WHERE uuid=? AND active=TRUE and (NOT WARNED=true);";
-    public static final String SET_WARNED = "UPDATE "+table_prefix+"warnings SET warned=? WHERE id=?";
+    public static final String ADD_WARN = "INSERT INTO warnings (uuid, ip, reason, banned_by_uuid, banned_by_name, time, until, silent, ipban, active, server_origin, server_scope, warned) VALUES (?,?,?,?,?,?,?,?,?,true,'proxy','*', false)";
+    public static final String GET_ACTIVE_UNWARNED = "SELECT * FROM warnings WHERE uuid=? AND active=TRUE and (NOT WARNED=true)";
+    public static final String SET_WARNED = "UPDATE warnings SET warned=? WHERE id=?";
 
-    public static final String ADD_HISTORY = "INSERT INTO "+table_prefix+"history (uuid, ip, name) SELECT ?,?,? FROM DUAL WHERE NOT EXISTS (SELECT * FROM litebans_history WHERE uuid=? AND ip=? AND name=?);";
-    public static final String RESOLVE_NAME = "SELECT uuid FROM "+table_prefix+"history WHERE LOWER(name)=LOWER(?) ORDER BY 'time' DESC LIMIT 1";
-    public static final String RESOLVE_UUID = "SELECT name FROM "+table_prefix+"history WHERE uuid=? ORDER BY 'time' DESC LIMIT 1;";
-    public static final String RESOLVE_UUID_TO_IP = "SELECT ip FROM "+table_prefix+"history WHERE uuid=? ORDER BY 'time' DESC LIMIT 1;";
-    //I have no clue what I'm doing anymore.
-    public static final String FIND_ALL_ALTS = "WITH RECURSIVE paths (ip, uuid_dest, name) AS (SELECT ip, uuid, name FROM litebans_history WHERE uuid=? UNION SELECT litebans_history.ip, litebans_history.uuid, litebans_history.name FROM paths JOIN litebans_history ON (paths.ip = litebans_history.ip or paths.uuid_dest = litebans_history.uuid))SELECT * FROM paths;";
-    public static final String FIND_ALL_ALTS_BANNED = "WITH RECURSIVE paths (ip, uuid_dest, name) AS (SELECT ip, uuid, name FROM litebans_history WHERE uuid=? UNION SELECT litebans_history.ip, litebans_history.uuid, litebans_history.name FROM paths JOIN litebans_history ON (paths.ip = litebans_history.ip or paths.uuid_dest = litebans_history.uuid))SELECT *, false as warned FROM litebans_bans WHERE uuid in (select uuid_dest from paths) AND active=true AND (until>=(UNIX_TIMESTAMP()) OR until=-1);";
+    public static final String ADD_HISTORY = "INSERT INTO history (uuid, ip, name) SELECT ?,?,? FROM DUAL WHERE NOT EXISTS (SELECT * FROM history WHERE uuid=? AND ip=? AND name=?)";
+    public static final String RESOLVE_NAME = "SELECT uuid FROM history WHERE LOWER(name)=LOWER(?) ORDER BY 'time' DESC LIMIT 1";
+    public static final String RESOLVE_UUID = "SELECT name FROM history WHERE uuid=? ORDER BY 'time' DESC LIMIT 1";
+    public static final String RESOLVE_UUID_TO_IP = "SELECT ip FROM history WHERE uuid=? ORDER BY 'time' DESC LIMIT 1";
 
     public static Map<String,Ban> muteCache = new HashMap<>();
 
     private static HikariDataSource ds;
 
-    public SQLStore(String jdbcURL, String username, String password) {
+    public H2Store(String path) {
         HikariConfig config = new HikariConfig();
 
-        config.setDriverClassName("org.mariadb.jdbc.Driver");
-        config.setJdbcUrl(jdbcURL);
-        config.setUsername(username);
-        config.setPassword(password);
+        String jdbc = "jdbc:h2:"+path+"/testdb";
+
+        System.out.println(" >>> " +jdbc);
+
+        config.setDriverClassName("org.h2.Driver");
+        config.setJdbcUrl(jdbc);
         config.addDataSourceProperty("cachePrepStmts", "true");
         config.addDataSourceProperty("prepStmtCacheSize", "250");
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
@@ -88,7 +85,7 @@ public class SQLStore implements Datastore {
 
     private void init() {
 
-        String[] createStrings = {CREATE_BANS,CREATE_MUTES,CREATE_WARNS,CREATE_KICKS, CREATE_HISTORY, CREATE_CONFIG, CREATE_VERSION};
+        String[] createStrings = {CREATE_BANS,CREATE_MUTES,CREATE_WARNS,CREATE_KICKS, CREATE_HISTORY};
 
         try {
             Connection conn = ds.getConnection();
@@ -198,24 +195,12 @@ public class SQLStore implements Datastore {
 
     @Override
     public HashSet<Alt> getAlts(UUID uuid) {
-        try(Connection conn = ds.getConnection()){
-            PreparedStatement statement = conn.prepareStatement(FIND_ALL_ALTS);
-            statement.setString(1,uuid.toString());
-            ResultSet res = statement.executeQuery();
-            HashSet<Alt> alts = new HashSet<>();
-            while (res.next()) {
-                alts.add(new Alt(res.getString("name"),UUID.fromString(res.getString("uuid_dest")),res.getString("ip")));
-            }
-            return alts;
-        }catch(SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return new HashSet<>();
     }
 
     @Override
     public HashSet<Ban> getAltsBanned(UUID uuid) {
-        return runBanStatement(FIND_ALL_ALTS_BANNED,uuid.toString());
+        return new HashSet<>();
     }
 
     @Override

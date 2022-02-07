@@ -61,5 +61,7 @@ public interface Datastore {
     UUID resolveName(String name);
     String resolveUUIDToIp(UUID uuid);
 
+    void close();
+
 
 }

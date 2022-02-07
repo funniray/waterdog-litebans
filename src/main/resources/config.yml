@@ -28,6 +28,11 @@
 
 showpiracywarning: true
 
+# What datastore to use
+# Options available: h2 (local), mysql
+store: h2
+
+# mysql only options
 jdbcurl: "jdbc:mysql://localhost:3306/litebans"
 dbusername: "root"
 dbpassword: ""
