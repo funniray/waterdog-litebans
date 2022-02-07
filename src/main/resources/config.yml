@@ -39,6 +39,7 @@ dbpassword: ""
 
 #This statement may cause issues on MySQL 5.7 or MariaDB versions less than 10.2.2
 #If it is, disable this option.
+#This also is not supported on H2 stores. Feel free to raise a PR if you want this feature.
 
 #See https://github.com/funniray/waterdog-litebans/issues/2
 checkAlts: true
