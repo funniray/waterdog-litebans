@@ -171,15 +171,16 @@ public class Ban {
             ip = playerName;
         } else {
             uuid = LBWD.datastore.resolveName(playerName);
-            ip = LBWD.datastore.resolveUUIDToIp(uuid);
             if (uuid==null){
                 if (isIpBan) {
+                    // If we couldn't find the player in the DB, we assume that the target string is an IP
                     ip = playerName;
-                    uuid = null;
                 } else {
                     commandSender.sendMessage(Colors.RED + "The player " + playerName + " has never joined the server.");
                     return null;
                 }
+            } else {
+                ip = LBWD.datastore.resolveUUIDToIp(uuid);
             }
         }
 

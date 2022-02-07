@@ -49,6 +49,10 @@ public class PardonCommand extends Command {
                 return true;
             }
 
+            if (ban == null) {
+                return true;
+            }
+
             LBWD.datastore.removeBan(ban);
 
             for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers().values()) {

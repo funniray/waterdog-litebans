@@ -49,6 +49,10 @@ public class UnmuteCommand extends Command {
                 return true;
             }
 
+            if (ban == null) {
+                return true;
+            }
+
             LBWD.datastore.removeMute(ban);
 
             for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers().values()) {
