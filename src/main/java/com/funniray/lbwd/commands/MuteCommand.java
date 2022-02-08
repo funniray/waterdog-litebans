@@ -52,6 +52,10 @@ public class MuteCommand extends Command {
                 return true;
             }
 
+            if (ban == null) {
+                return true;
+            }
+
             LBWD.datastore.addMute(ban);
 
             String message = String.format((ban.isSilent()?LBWD.getConfigString("SilentPrefix"):"")+LBWD.getConfigString("MuteBroadcast"),ban.getName(),ban.getBannedByName(),ban.getReason(),ban.getUntilString());

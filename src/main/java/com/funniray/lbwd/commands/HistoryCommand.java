@@ -65,28 +65,28 @@ public class HistoryCommand extends Command {
             Set<Ban> kicks = LBWD.datastore.getHistoricalKicks(uuid);
 
 
-            if (bans.size() > 0) {
+            if (bans != null && bans.size() > 0) {
                 commandSender.sendMessage(Colors.DARK_RED + strings[0] + "'s bans:");
                 for(Ban ban : bans) {
                     commandSender.sendMessage(Colors.GREEN + "Banned at "+Colors.AQUA+(new Date((long) ban.getTime())).toString() + Colors.GREEN + (ban.getUntil()>0?" for "+ Colors.DARK_AQUA + DateUtils.getDurationBreakdown((long) ((long) ban.getUntil()-ban.getTime())) +Colors.GREEN:"")+ " by "+Colors.BLUE+ban.getBannedByName() +Colors.GREEN+ " for "+Colors.LIGHT_PURPLE+ban.getReason()+Colors.GREEN + (ban.isActive()?"":" removed by "+Colors.GRAY+ban.getRemovedByName()));
                 }
             }
 
-            if (mutes.size() > 0) {
+            if (mutes != null && mutes.size() > 0) {
                 commandSender.sendMessage(Colors.DARK_RED + strings[0] + "'s mutes:");
                 for(Ban ban : mutes) {
                     commandSender.sendMessage(Colors.GREEN + "Muted at "+Colors.AQUA+(new Date((long) ban.getTime())).toString() + Colors.GREEN + (ban.getUntil()>0?" for "+ Colors.DARK_AQUA + DateUtils.getDurationBreakdown((long) ((long) ban.getUntil()-ban.getTime())) +Colors.GREEN:"")+ " by "+Colors.BLUE+ban.getBannedByName() +Colors.GREEN+ " for "+Colors.LIGHT_PURPLE+ban.getReason()+Colors.GREEN + (ban.isActive()?"":" removed by "+Colors.GRAY+ban.getRemovedByName()));
                 }
             }
 
-            if (warns.size() > 0) {
+            if (warns != null && warns.size() > 0) {
                 commandSender.sendMessage(Colors.DARK_RED + strings[0] + "'s warns:");
                 for(Ban ban : warns) {
                     commandSender.sendMessage(Colors.GREEN + "Warned at "+Colors.AQUA+(new Date((long) ban.getTime())).toString() + Colors.GREEN + (ban.getUntil()>0?" for "+ Colors.DARK_AQUA + DateUtils.getDurationBreakdown((long) ((long) ban.getUntil()-ban.getTime())) +Colors.GREEN:"")+ " by "+Colors.BLUE+ban.getBannedByName() +Colors.GREEN+ " for "+Colors.LIGHT_PURPLE+ban.getReason()+Colors.GREEN + (ban.isActive()?"":" removed by "+Colors.GRAY+ban.getRemovedByName()));
                 }
             }
 
-            if (kicks.size() > 0) {
+            if (kicks != null && kicks.size() > 0) {
                 commandSender.sendMessage(Colors.DARK_RED + strings[0] + "'s kicks:");
                 for(Ban ban : kicks) {
                     commandSender.sendMessage(Colors.GREEN + "Kicked at "+Colors.AQUA+(new Date((long) ban.getTime())).toString() + Colors.GREEN + (ban.getUntil()>0?" for "+ Colors.DARK_AQUA + DateUtils.getDurationBreakdown((long) ((long) ban.getUntil()-ban.getTime())) +Colors.GREEN:"")+ " by "+Colors.BLUE+ban.getBannedByName() +Colors.GREEN+ " for "+Colors.LIGHT_PURPLE+ban.getReason()+Colors.GREEN + (ban.isActive()?"":" removed by "+Colors.GRAY+ban.getRemovedByName()));

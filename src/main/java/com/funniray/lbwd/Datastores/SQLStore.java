@@ -41,7 +41,7 @@ public class SQLStore implements Datastore {
     public static final String GET_BANS_BY_UUID_HISTORICAL = "SELECT *, false as warned FROM "+table_prefix+"bans WHERE UUID=?;";
     public static final String GET_MUTES_BY_UUID_HISTORICAL = "SELECT *, false as warned FROM "+table_prefix+"mutes WHERE UUID=?;";
     public static final String GET_WARNS_BY_UUID_HISTORICAL = "SELECT * FROM "+table_prefix+"warnings WHERE UUID=?;";
-    public static final String GET_KICKS_BY_UUID_HISTORICAL = "SELECT *, false as warned, \"00000000-0000-0000-0000-000000000000\" as removed_by_uuid, null as removed_by_name, null as removed_by_date FROM "+table_prefix+"kicks WHERE UUID=?;";
+    public static final String GET_KICKS_BY_UUID_HISTORICAL = "SELECT *, false as warned, '00000000-0000-0000-0000-000000000000' as removed_by_uuid, null as removed_by_name, null as removed_by_date FROM kicks WHERE UUID=?";
 
     public static final String GET_BANS_BY_UUID_ACTIVE = "SELECT *, false AS warned FROM "+table_prefix+"bans WHERE uuid=? AND ipban=false AND active=true AND (until>=(UNIX_TIMESTAMP()*1000) OR until=-1);";
     public static final String GET_SOMETHING_BY_UUID_ACTIVE = "SELECT *, false AS warned FROM "+table_prefix+"%node%s WHERE uuid=? AND ipban=false AND active=true AND (until>=(UNIX_TIMESTAMP()*1000) OR until=-1);";
@@ -142,6 +142,7 @@ public class SQLStore implements Datastore {
 
     @Override
     public HashSet<Ban> getActiveBans(String uuid, String node, boolean ip) {
+        node = node.equals("warn") ? "warning" : node;
         if (ip) {
             return runBanStatement(GET_SOMETHING_BY_IP_ACTIVE.replace("%node%",node), uuid);
         }
@@ -164,9 +165,9 @@ public class SQLStore implements Datastore {
     @Override
     public HashSet<Ban> getActiveWarns(String uuid) {
         if (uuid.contains(".") || uuid.contains(":")) {
-            return runBanStatement(GET_SOMETHING_BY_IP_ACTIVE.replace("%node%","warn"), uuid);
+            return runBanStatement(GET_SOMETHING_BY_IP_ACTIVE.replace("%node%","warning"), uuid);
         }
-        return runBanStatement(GET_SOMETHING_BY_UUID_ACTIVE.replace("%node%","warn"), uuid);
+        return runBanStatement(GET_SOMETHING_BY_UUID_ACTIVE.replace("%node%","warning"), uuid);
     }
 
 

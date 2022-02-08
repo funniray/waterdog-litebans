@@ -52,6 +52,10 @@ public class BanCommand extends Command {
                 return true;
             }
 
+            if (ban == null) {
+                return true;
+            }
+
             LBWD.datastore.addBan(ban);
 
             String message = String.format((ban.isSilent()?LBWD.getConfigString("SilentPrefix"):"")+LBWD.getConfigString("BanBroadcast"),ban.getName(),ban.getBannedByName(),ban.getReason(),ban.getUntilString());

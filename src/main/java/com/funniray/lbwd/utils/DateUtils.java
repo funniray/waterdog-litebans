@@ -43,7 +43,7 @@ public class DateUtils {
     //Credit: Banmanager
     public static String getDurationBreakdown(long time) {
         if (time <= 0) {
-            return "99 Years";
+            return "Indefinite";
         }
 
         StringBuilder diff = new StringBuilder();
