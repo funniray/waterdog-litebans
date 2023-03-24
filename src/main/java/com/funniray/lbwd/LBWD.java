@@ -24,9 +24,9 @@ import com.funniray.lbwd.commands.*;
 import com.funniray.lbwd.handlers.LoginHandler;
 import com.funniray.lbwd.handlers.PreLoginHandler;
 import com.funniray.lbwd.handlers.MessageHandler;
+import dev.waterdog.waterdogpe.event.defaults.PlayerAuthenticatedEvent;
 import dev.waterdog.waterdogpe.event.defaults.PlayerChatEvent;
 import dev.waterdog.waterdogpe.event.defaults.PlayerLoginEvent;
-import dev.waterdog.waterdogpe.event.defaults.PlayerPreLoginEvent;
 import dev.waterdog.waterdogpe.plugin.Plugin;
 import dev.waterdog.waterdogpe.utils.config.Configuration;
 
@@ -102,7 +102,7 @@ public class LBWD extends Plugin {
         getProxy().getCommandMap().registerCommand(new HistoryCommand());
         getProxy().getCommandMap().registerCommand(new AltsCommand());
 
-        getProxy().getEventManager().subscribe(PlayerPreLoginEvent.class, new PreLoginHandler());
+        getProxy().getEventManager().subscribe(PlayerAuthenticatedEvent.class, new PreLoginHandler());
         getProxy().getEventManager().subscribe(PlayerLoginEvent.class, new LoginHandler());
         getProxy().getEventManager().subscribe(PlayerChatEvent.class, new MessageHandler());
 

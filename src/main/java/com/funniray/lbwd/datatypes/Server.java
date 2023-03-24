@@ -17,7 +17,8 @@
 
 package com.funniray.lbwd.datatypes;
 
-import javax.annotation.Nullable;
+import jline.internal.Nullable;
+
 import java.util.Date;
 import java.util.UUID;
 
