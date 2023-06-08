@@ -25,8 +25,8 @@ import com.funniray.lbwd.utils.UseQuotes;
 import dev.waterdog.waterdogpe.ProxyServer;
 import dev.waterdog.waterdogpe.command.CommandSender;
 import dev.waterdog.waterdogpe.player.ProxiedPlayer;
+import jline.internal.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.*;
 
 public class Ban {

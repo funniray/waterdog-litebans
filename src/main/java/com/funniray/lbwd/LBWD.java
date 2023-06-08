@@ -24,9 +24,9 @@ import com.funniray.lbwd.commands.*;
 import com.funniray.lbwd.handlers.LoginHandler;
 import com.funniray.lbwd.handlers.PreLoginHandler;
 import com.funniray.lbwd.handlers.MessageHandler;
+import dev.waterdog.waterdogpe.event.defaults.PlayerAuthenticatedEvent;
 import dev.waterdog.waterdogpe.event.defaults.PlayerChatEvent;
 import dev.waterdog.waterdogpe.event.defaults.PlayerLoginEvent;
-import dev.waterdog.waterdogpe.event.defaults.PlayerPreLoginEvent;
 import dev.waterdog.waterdogpe.plugin.Plugin;
 import dev.waterdog.waterdogpe.utils.config.Configuration;
 
@@ -82,12 +82,6 @@ public class LBWD extends Plugin {
                 datastore = new SQLStore(config.getString("jdbcurl"),config.getString("dbusername"),config.getString("dbpassword"));
         }
 
-        if (getConfig().getBoolean("showpiracywarning")) {
-            this.getLogger().warn("A WaterDogPE plugin that attempts at being fully compatible with litebans\n" +
-                "A free plugin by Funniray. https://github.com/funniray/waterdog-litebans If you paid for this plugin, you were scammed.\n" +
-                "Report resellers to beingscammed@reallyisnt.fun");
-        }
-
         getProxy().getCommandMap().registerCommand(new BanCommand());
         getProxy().getCommandMap().registerCommand(new PardonCommand());
         getProxy().getCommandMap().registerCommand(new MuteCommand());
@@ -102,7 +96,7 @@ public class LBWD extends Plugin {
         getProxy().getCommandMap().registerCommand(new HistoryCommand());
         getProxy().getCommandMap().registerCommand(new AltsCommand());
 
-        getProxy().getEventManager().subscribe(PlayerPreLoginEvent.class, new PreLoginHandler());
+        getProxy().getEventManager().subscribe(PlayerAuthenticatedEvent.class, new PreLoginHandler());
         getProxy().getEventManager().subscribe(PlayerLoginEvent.class, new LoginHandler());
         getProxy().getEventManager().subscribe(PlayerChatEvent.class, new MessageHandler());
 

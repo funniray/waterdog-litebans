@@ -22,7 +22,7 @@ import com.funniray.lbwd.datatypes.Ban;
 import com.funniray.lbwd.utils.Colors;
 import com.funniray.lbwd.utils.DateUtils;
 import dev.waterdog.waterdogpe.ProxyServer;
-import dev.waterdog.waterdogpe.event.defaults.PlayerPreLoginEvent;
+import dev.waterdog.waterdogpe.event.defaults.PlayerAuthenticatedEvent;
 import dev.waterdog.waterdogpe.player.ProxiedPlayer;
 
 import java.util.Date;
@@ -30,9 +30,9 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class PreLoginHandler implements Consumer<PlayerPreLoginEvent> {
+public class PreLoginHandler implements Consumer<PlayerAuthenticatedEvent> {
     @Override
-    public void accept(PlayerPreLoginEvent e) {
+    public void accept(PlayerAuthenticatedEvent e) {
         LBWD.datastore.addHistory(e.getLoginData().getDisplayName(), e.getLoginData().getUuid(), e.getAddress().getAddress().getHostAddress());
 
         UUID uuid = e.getLoginData().getUuid();

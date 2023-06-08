@@ -15,19 +15,6 @@
 #   I am available for any questions/requests: funniray10@gmail.com
 #
 
-###############################################################################################################
-###############################################################################################################
-####                                                                                                       ####
-####                               IF YOU PAID FOR THIS, YOU WERE SCAMMED                                  ####
-####                                     THIS IS A FREE PLUGIN                                             ####
-####                           https://github.com/funniray/waterdog-litebans                               ####
-####                           Report scammers to beingscammed@reallyisnt.fun                              ####
-####                                                                                                       ####
-###############################################################################################################
-###############################################################################################################
-
-showpiracywarning: true
-
 # What datastore to use
 # Options available: h2 (local), mysql
 store: h2
